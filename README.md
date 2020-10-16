@@ -1,0 +1,2 @@
+# Catalent-Report-Search-Engine
+User friendly report PDF search / Word doc / images or scans. Bring up a list of relevant reports o Keyword search (tagging files). Content search for typed copies o Reports exist on the system; lab books have not already been scanned. Data would need to be uploaded later. Reports are in a standard format / template. Notes about the manufacturing process are inputted along with the report. Users hoping to perform the same processes can search to find relevant notes and add information where necessary
