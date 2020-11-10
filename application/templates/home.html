@@ -3,15 +3,16 @@
 {% block content %}
   <div class="row">
       <div class="col-md-12 text-center">
-          <h1>Welcome to Catalent.</h1>
-
-          {% if login %}
-          <h3>Let's get started.</h3>
-          {% else %}
-          <p>Already registered? <a href="{{url_for('login') }}">Login</a></p>
-          {% endif %}
-
-          </div>
+        <h3> Welcome to Catalent! </h3>
+        <p> Upload your report file(.pdf) from here. <p>
+        </br>
+      </div>
+      <div class="col-md-12 text-center">
+        <form enctype="multipart/form-data">
+          <input type="file" id="file" accept="application/pdf" name="file" multiple >
+          <input type="submit" class="btn btn-primary" value="Upload" formmethod="post" formaction="">
+        </form>
+      </div>
   </div>
 
 {% endblock %}
