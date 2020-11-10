@@ -3,7 +3,7 @@
   
     <div class="container">
         <h1>Registration Page</h1>
-        <form>
+        <!-- <form>
             <div class="form-group">
                 <label for="exampleInputEmail1">Username</label>
                 <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter username">
@@ -30,7 +30,45 @@
             </div>
             <br/>
             <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
+        </form> -->
+
+        <form name="register" action="" method="post" novalidate>
+            <fieldset class="form-group">    
+                {{ form.hidden_tag() }}       
+                    <p> {{ form.email.label }}</br>
+                        {{ form.email }}
+                        {% for error in form.email.errors %}
+                         <span class="error-message">{{ error }}</span>
+                        {% endfor %}
+                    </p>
+
+                    <p> {{ form.retypedEmail.label }}</br>
+                        {{ form.retypedEmail }}
+                        {% for error in form.retypedEmail.errors %}
+                         <span class="error-message">{{ error }}</span>
+                        {% endfor %}
+                    </p>
+                
+                    <p> {{ form.password.label }}</br>
+                        {{ form.password }}
+                        {% for error in form.password.errors %}
+                         <span class="error-message">{{ error }}</span>
+                        {% endfor %}
+                    </p>
+                
+                    <p> {{ form.confirmPassword.label }}</br>
+                        {{ form.confirmPassword }}
+                        {% for error in form.confirmPassword.errors %}
+                         <span class="error-message">{{ error }}</span>
+                        {% endfor %}
+                    </p>
+                
+                    <p> 
+                        {{ form.register() }}
+                    </p>
+                
+            </fieldset>
+            </form>
     </div>
 {% endblock %}
     
