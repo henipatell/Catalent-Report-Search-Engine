@@ -36,8 +36,8 @@ def register():
         password    = form.password.data
         confirmed_password = form.confirmPassword.data
 
-        user = User(user_id=user_id, email=email, password=password)
-        #user.set_password(password)
+        user = User(user_id=user_id, email=email)
+        user.set_password(password)
         user.save()
         flash("You are successfully registered!","success")
         return redirect(url_for('home'))
@@ -54,7 +54,7 @@ def login():
         password    = form.password.data
 
         user = User.objects(email=email).first()
-        if user and password == user.password: #user.get_password(password)
+        if user and password == user.get_password(password): #user.get_password(password)
             flash("you are successfully logged in!", "success")
             return redirect("/home")
         else:
