@@ -7,8 +7,8 @@ class User(db.Document):
     username = db.StringField(max_length=10)
     email = db.StringField(max_length=30)
     retyped_email = db.StringField(max_length=30)
-    password = db.StringField(max_length=8)
-    confirmed_password = db.StringField(min_length=8)
+    password = db.StringField()
+    confirmed_password = db.StringField()
 
     def set_password(self, password):
         self.password = generate_password_hash(password)

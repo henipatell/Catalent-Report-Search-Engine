@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <p> Upload your report file(.pdf) from here. <p>
+        </br>
+      </div>
+      <div class="col-md-12 text-center">
+        <form enctype="multipart/form-data">
+          <input type="file" id="file" accept="application/pdf" name="file" multiple >
+          <input type="submit" class="btn btn-primary" value="Upload" formmethod="post" formaction="">
+        </form>
+      </div>
+  </div>
+{% endblock %}
