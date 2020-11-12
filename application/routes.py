@@ -42,7 +42,7 @@ def register():
         password    = form.password.data
         confirmed_password = form.confirmPassword.data
 
-        user = User(user_id=user_id, email=email, confirmed_password=password)
+        user = User(user_id=user_id, email=email)
         user.set_password(password)
         user.save()
         session['user_id'] = user.user_id
