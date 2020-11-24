@@ -38,7 +38,13 @@ def search_results():
     res = es.search(
     index='data_science_index',
     body={
-    "query" : {"match": {"content": search_term}},
+    "query": {
+        "multi_match": {
+            "query": search_term,
+            "fields": ["content", "filename"],
+            "type": "most_fields"
+        }
+    },
     "highlight" : {"pre_tags" : ["<b>"] , "post_tags" : ["</b>"], "fields" : {"content":{}}}})
     res['ST']=search_term
     for hit in res['hits']['hits']:
@@ -93,6 +99,13 @@ def logout():
     session['user_id'] = False
     session.pop('username',None)
     return redirect(url_for('login'))
+
+# @app.route('/pdf/<pdf_name>')
+# def return_pdf(pdf_name):
+#     try:
+#         return redirect(url_for('static', filename=app.config['PDF_DIR'] + secure_filename(pdf_name)))
+#     except:
+#         abort(404)
  
 @app.route("/user")
 def user():

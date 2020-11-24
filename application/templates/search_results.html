@@ -1,40 +1,58 @@
-{% extends 'layout.html' %}
+<html>
+<head>
+  <title>Catalent</title>
+  <meta charset="UTF-8">
+  <!-- <meta name="robots" content="noindex">
+  <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="{{ url_for('static',filename='css/main.css')}}"/>
 
-{% block content %}
+  <script language="Javascript">
+    function populateText() {
+        var data = document.getElementsByName("goodSummary");
+        for (const item of data) {
+            item.innerHTML = item.textContent
+        }
+    }
+</script>
 
-<div class="container">
-    <h3>
-        Results for :
-        <span class="words-results">{{ user_request }}</span> 
-    </h3>  
+</head>
+<body onload="populateText()">
+    {% include "includes/nav.html" %}
+    <div class="container">
+        <h3>
+            Results for :
+            <span class="words-results">{{ user_request }}</span> 
+        </h3>  
 
-    <div class="words-results">
-        <table class="table">
-            <thead>
-            <tr>
-            <th>File Name</th>
-            <th>Link</th>
-            <th>Summary</th> 
-            <th>Score</th>
-            </tr>
-            </thead>
-            {% for hit in res['hits']['hits'] %}
-                <tbody>
-                    <tr>
-                    <th scope="row">{{ hit['_source']['file']['filename'] }}</th>
-                    <td><a href="{{ hit['_source']['file']['url'] }}">{{ hit['_source']['file']['filename'] }}</a></td>
-                    <td id="{{loop.index}}" name="goodSummary"> {{ hit['good_summary']}} </td> 
-                    <td>{{ hit['_score'] }}</td>
-                    </tr>
-                </tbody>
-           {% endfor %}
-           </table>
+        <div class="words-results">
+            <table class="table">
+                <thead>
+                <tr>
+                <th>File Name</th>
+                <th>Link</th>
+                <th>Summary</th> 
+                <!-- <th>Score</th> -->
+                </tr>
+                </thead>
+                {% for hit in res['hits']['hits'] %}
+                    <tbody>
+                        <tr>
+                        <th scope="row">{{ hit['_source']['file']['filename'] }}</th>
+                        <td><a href="{{ hit['_source']['file']['url'] }}" type="application/pdf">{{ hit['_source']['file']['filename'] }}</a></td>
+                        <td id="{{ loop.index }}" name="goodSummary"> {{ hit['good_summary']}} </td> 
+                        <!-- <td>{{ hit['_score'] }}</td> -->
+                        </tr>
+                    </tbody>
+            {% endfor %}
+            </table>
+        </div>
+
+        <center>
+            <br/> <h4>{{ res['hits']['total']['value'] }} results found for <em>"{{res['ST']}}"</em> </h4>
+        </center>   
     </div>
-
-    <center>
-        <br/> <h4>{{ res['hits']['total']['value'] }} results found for <em>"{{res['ST']}}"</em> </h4>
-    </center>   
-</div>
-
-
-{% endblock %}
+</body>
