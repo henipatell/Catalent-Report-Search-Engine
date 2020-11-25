@@ -1,6 +1,6 @@
 import os
 from application import app, db
-from flask import render_template, request, json, Response, redirect, flash, url_for, session
+from flask import render_template, request, json, Response, redirect, flash, url_for, session, abort, send_from_directory
 from flask_bootstrap import Bootstrap
 import sqlite3
 from werkzeug.utils import secure_filename
@@ -41,7 +41,7 @@ def search_results():
     "query": {
         "multi_match": {
             "query": search_term,
-            "fields": ["content", "filename"],
+            "fields": ["content", "filename", "_source.content"],
             "type": "most_fields"
         }
     },
@@ -100,16 +100,10 @@ def logout():
     session.pop('username',None)
     return redirect(url_for('login'))
 
-# @app.route('/pdf/<pdf_name>')
-# def return_pdf(pdf_name):
-#     try:
-#         return redirect(url_for('static', filename=app.config['PDF_DIR'] + secure_filename(pdf_name)))
-#     except:
-#         abort(404)
- 
-@app.route("/user")
-def user():
-    #User(user_id=1, username='henipatel', email='henipatel@gmail.com', retyped_email='henipatel@gmail.com', password='heni1234', confirmed_password='heni1234').save()
-    users = User.objects.all()
-    return render_template('user.html', users=users)    
+#unused code for now
+# @app.route("/user")
+# def user():
+#     #User(user_id=1, username='henipatel', email='henipatel@gmail.com', retyped_email='henipatel@gmail.com', password='heni1234', confirmed_password='heni1234').save()
+#     users = User.objects.all()
+#     return render_template('user.html', users=users)    
 
