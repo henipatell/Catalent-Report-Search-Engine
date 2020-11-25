@@ -1,13 +1,19 @@
 import os
 from application import app, db
-from flask import render_template, request, json, Response, redirect, flash, url_for, session
+from flask import render_template, request, json, Response, redirect, flash, url_for, session, abort, send_from_directory
 from flask_bootstrap import Bootstrap
 import sqlite3
 from werkzeug.utils import secure_filename
 from application.models import User
 from application.forms import LoginForm, RegisterForm
+from elasticsearch import Elasticsearch
+
+es = Elasticsearch('127.0.0.1', port=9200)
 
 @app.route("/")
+def search_term():
+    return render_template("search.html")
+
 @app.route("/home", methods=["GET", "POST"])
 def home():
     return render_template("home.html", home=True)
@@ -24,10 +30,26 @@ def search(searchTerm=None):
     return render_template("search.html", searchTerm=searchTerm)
 
 
-@app.route("/search-results", methods=["POST"])
+@app.route("/search/results", methods=["GET", "POST"])
 def search_results():
-    searchTerm = request.form.get('searchTerm')
-    return render_template("search_results.html", searchTerm=searchTerm)
+    # searchTerm = request.form.get('searchTerm')
+    # return render_template("search_results.html", searchTerm=searchTerm)
+    search_term = request.form.get('searchTerm')
+    res = es.search(
+    index='data_science_index',
+    body={
+    "query": {
+        "multi_match": {
+            "query": search_term,
+            "fields": ["content", "filename", "_source.content"],
+            "type": "most_fields"
+        }
+    },
+    "highlight" : {"pre_tags" : ["<b>"] , "post_tags" : ["</b>"], "fields" : {"content":{}}}})
+    res['ST']=search_term
+    for hit in res['hits']['hits']:
+        hit['good_summary']='….'.join(hit['highlight']['content'][1:])
+    return render_template('search_results.html', res=res, user_request=search_term)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -77,10 +99,11 @@ def logout():
     session['user_id'] = False
     session.pop('username',None)
     return redirect(url_for('login'))
- 
-@app.route("/user")
-def user():
-    #User(user_id=1, username='henipatel', email='henipatel@gmail.com', retyped_email='henipatel@gmail.com', password='heni1234', confirmed_password='heni1234').save()
-    users = User.objects.all()
-    return render_template('user.html', users=users)    
+
+#unused code for now
+# @app.route("/user")
+# def user():
+#     #User(user_id=1, username='henipatel', email='henipatel@gmail.com', retyped_email='henipatel@gmail.com', password='heni1234', confirmed_password='heni1234').save()
+#     users = User.objects.all()
+#     return render_template('user.html', users=users)    
 
