@@ -4,7 +4,6 @@
   <div class="row">
     <div class="col-md-12 text-center">
         <h1>Welcome to Catalent.</h1>
-        </br>
         {% if session['username'] %}
             <h3>Let's get started.</h3>
             <div class="row">
@@ -24,5 +23,6 @@
         {% endif %}
     </div>
   </div>
+  <img src="{{ url_for('static', filename='resources/bg_image.png') }}" style="float:right; height:600; width: 700px;">
 {% endblock %}
 
