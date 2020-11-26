@@ -22,37 +22,43 @@
 </head>
 <body onload="populateText()">
     {% include "includes/nav.html" %}
-    <div class="container">
-        <h3>
-            Results for :
-            <span class="words-results">{{ user_request }}</span> 
-        </h3>  
-
-        <div class="words-results">
-            <table class="table">
-                <thead>
-                <tr>
-                <th>File Name</th>
-                <th>Link</th>
-                <th>Summary</th> 
-                <!-- <th>Score</th> -->
-                </tr>
-                </thead>
-                {% for hit in res['hits']['hits'] %}
-                    <tbody>
-                        <tr>
-                        <th scope="row">{{ hit['_source']['file']['filename'] }}</th>
-                        <td><a href="file://D:\Internship-Project\TempProject\sample_pdf_files\{{ hit['_source']['file']['filename'] }}" type="application/pdf" target="_blank">{{ hit['_source']['file']['filename'] }}</a></td>
-                        <td id="{{ loop.index }}" name="goodSummary"> {{ hit['good_summary']}} </td> 
-                        <!-- <td>{{ hit['_score'] }}</td> -->
-                        </tr>
-                    </tbody>
-            {% endfor %}
-            </table>
+    <div class="jumbotron-fluid" style="height:100%; background-color: white;">
+        <div class="container">
+            <h3>
+                Results for :
+                <span class="words-results">{{ user_request }}</span> 
+            </h3>  
+    
+            <div class="words-results">
+                <table class="table">
+                    <thead>
+                    <tr>
+                    <th>File Name</th>
+                    <th>Link</th>
+                    <th>Summary</th> 
+                    <!-- <th>Score</th> -->
+                    </tr>
+                    </thead>
+                    {% for hit in res['hits']['hits'] %}
+                        <tbody>
+                            <tr>
+                            <th scope="row">{{ hit['_source']['file']['filename'] }}</th>
+                            <td><a href="file://D:\Internship-Project\TempProject\sample_pdf_files\{{ hit['_source']['file']['filename'] }}" type="application/pdf" target="_blank">{{ hit['_source']['file']['filename'] }}</a></td>
+                            <td id="{{ loop.index }}" name="goodSummary"> {{ hit['good_summary']}} </td> 
+                            <!-- <td>{{ hit['_score'] }}</td> -->
+                            </tr>
+                        </tbody>
+                {% endfor %}
+                </table>
+            </div>
+    
+            <center>
+                <br/> <h5>{{ res['hits']['total']['value'] }} results found for <em>"{{res['ST']}}"</em> </h5>
+            </center>   
         </div>
-
-        <center>
-            <br/> <h4>{{ res['hits']['total']['value'] }} results found for <em>"{{res['ST']}}"</em> </h4>
-        </center>   
     </div>
+</div>
+
+{% include "includes/footer.html" %}
+
 </body>

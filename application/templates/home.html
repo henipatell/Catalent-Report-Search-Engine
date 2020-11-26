@@ -1,28 +1,38 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-  <div class="row">
-    <div class="col-md-12 text-center">
-        <h1>Welcome to Catalent.</h1>
-        {% if session['username'] %}
-            <h3>Let's get started.</h3>
-            <div class="row">
-              <div class="col-md-12 text-center">
-                <p> Upload your report file(.pdf) from here. <p>
-                </br>
-              </div>
-              <div class="col-md-12 text-center">
-                <form enctype="multipart/form-data">
-                  <input type="file" id="file" accept="application/pdf" name="file" multiple >
-                  <input type="submit" class="btn btn-primary" value="Upload" formmethod="post" formaction="">
-                </form>
-              </div>
-            </div>
-        {% else %}
-          <p>Already registered? <a href="{{url_for('login') }}">Login</a></p>
-        {% endif %}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 text-center">
+          <h1 class="display-4">Welcome to Catalent.</h1>
+        </div>
+      </br>
     </div>
+    {% if session['username'] %}
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <p style="font-size: 1.4rem;"> Let's get started.</p>
+      </div>
+    </div>
+    <div class="row" style="margin-top:20px;">
+      <div class="col text-center">
+        <p style="font-size: 1.2rem;"> Search a report from here.</p>
+        <a href="{{url_for('search_term') }}"><img src="{{ url_for('static', filename='resources/search.png') }}" width="100" height="100"></a>
+      </div>
+      <div class="col text-center">
+        <p style="font-size: 1.2rem;"> Upload your new report from here.</p>
+          <a href="{{url_for('upload_file') }}"><img src="{{ url_for('static', filename='resources/upload.png') }}" width="100" height="100"></a>
+      </div>
+    </div>
+    {% else %}
+    <div class="row" style="margin-top:20px;">
+      <div class="col-md-12 text-center">
+        <p>Already registered? <a href="{{url_for('login') }}">Login</a></p>
+      </div>
+    </div>
+    <!-- <div class="row justify-content-center" style="margin-top: 285px;">
+        <img src="{{ url_for('static', filename='resources/bg_img3.png') }}" style="height:200px; width: 400px;">
+    </div> -->
+    {% endif %}
   </div>
-  <img src="{{ url_for('static', filename='resources/bg_image.png') }}" style="float:right; height:600; width: 700px;">
 {% endblock %}
-

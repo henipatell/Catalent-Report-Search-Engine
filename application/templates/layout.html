@@ -13,6 +13,7 @@
 </head>
 <body>
 {% include "includes/nav.html" %}
+<span class="border-bottom"></span>
 {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
@@ -21,12 +22,14 @@
                 </div>
             {% endfor %}
         {% endif %}
-    {% endwith %}
-<div class="jumbotron-fluid" >  
-  <!-- style="height: 100vh;  margin-bottom: 0px" -->
-    {% block content %}
+{% endwith %}
+<div class="jumbotron" style="background-color: white;">  
+{% block content %}
 
-    {% endblock %}
+{% endblock %}
+<div class="row justify-content-center" style="margin-top: 285px;">
+    <img src="{{ url_for('static', filename='resources/bg_img3.png') }}" style="height:200px; width: 400px;">
+</div>
 </div>
 {% include "includes/footer.html" %}
 </body>

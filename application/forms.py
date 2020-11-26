@@ -9,14 +9,14 @@ from application.models import User
 class LoginForm(FlaskForm):
     email = StringField("Email", validators=[DataRequired(), Email()])
     password = PasswordField("Password", validators=[DataRequired(), Length(min=8)])
-    login = SubmitField("Login")
+    submit = SubmitField("Login")
 
 class RegisterForm(FlaskForm):
     email = StringField("Email", validators=[DataRequired(), Email()])
     retypedEmail = StringField("Re-type Email", validators=[DataRequired(), Email(), EqualTo('email')])
     password = PasswordField("Password", validators=[DataRequired(), Length(min=8)])
     confirmPassword = PasswordField("Confirm Password", validators=[DataRequired(), EqualTo('password'), Length(min=8)])
-    register = SubmitField("Register")
+    submit = SubmitField("Register")
 
     def validate_email(self,email):
         user = User.objects(email=email.data).first()

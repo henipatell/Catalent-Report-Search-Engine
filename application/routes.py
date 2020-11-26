@@ -8,48 +8,71 @@ from application.models import User
 from application.forms import LoginForm, RegisterForm
 from elasticsearch import Elasticsearch
 
+ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'docs'}
+
 es = Elasticsearch('127.0.0.1', port=9200)
 
-@app.route("/")
-def search_term():
-    return render_template("search.html")
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+@app.route("/")
 @app.route("/home", methods=["GET", "POST"])
 def home():
     return render_template("home.html", home=True)
 
-# @app.route("/upload", methods=["GET", "POST"])
-# def upload():
-#     return render_template("upload.html")
+@app.route('/upload', methods=['GET', 'POST'])
+def upload_file():
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        # if user does not select file, browser also
+        # submit an empty part without filename
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return redirect(url_for('uploaded_file',
+                                    filename=filename))
+    return render_template("upload.html")
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'],
+                               filename)
 
 @app.route("/search/")
-@app.route("/search/<searchTerm>")
-def search(searchTerm=None):
+def search_term():
     if not session.get('username'):
       return redirect(url_for('login'))
-    return render_template("search.html", searchTerm=searchTerm)
+    return render_template("search.html")
 
 
 @app.route("/search/results", methods=["GET", "POST"])
 def search_results():
-    # searchTerm = request.form.get('searchTerm')
-    # return render_template("search_results.html", searchTerm=searchTerm)
-    search_term = request.form.get('searchTerm')
-    res = es.search(
-    index='data_science_index',
-    body={
-    "query": {
-        "multi_match": {
-            "query": search_term,
-            "fields": ["content", "filename", "_source.content"],
-            "type": "most_fields"
-        }
-    },
-    "highlight" : {"pre_tags" : ["<b>"] , "post_tags" : ["</b>"], "fields" : {"content":{}}}})
-    res['ST']=search_term
-    for hit in res['hits']['hits']:
-        hit['good_summary']='….'.join(hit['highlight']['content'][1:])
-    return render_template('search_results.html', res=res, user_request=search_term)
+    if session.get('username'):
+        search_term = request.form.get('searchTerm')
+        res = es.search(
+        index='data_science_index',
+        body={
+        "query": {
+            "multi_match": {
+                "query": search_term,
+                "fields": ["content", "filename", "_source.content"],
+                "type": "most_fields"
+            }
+        },
+        "highlight" : {"pre_tags" : ["<b>"] , "post_tags" : ["</b>"], "fields" : {"content":{}}}})
+        res['ST']=search_term
+        for hit in res['hits']['hits']:
+            hit['good_summary']='….'.join(hit['highlight']['content'][1:])
+        return render_template('search_results.html', res=res, user_request=search_term)
+    return redirect(url_for('login'))
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -101,9 +124,9 @@ def logout():
     return redirect(url_for('login'))
 
 #unused code for now
-# @app.route("/user")
-# def user():
-#     #User(user_id=1, username='henipatel', email='henipatel@gmail.com', retyped_email='henipatel@gmail.com', password='heni1234', confirmed_password='heni1234').save()
-#     users = User.objects.all()
-#     return render_template('user.html', users=users)    
+@app.route("/user")
+def user():
+    #User(user_id=1, username='henipatel', email='henipatel@gmail.com', retyped_email='henipatel@gmail.com', password='heni1234', confirmed_password='heni1234').save()
+    users = User.objects.all()
+    return render_template('user.html', users=users)    
 

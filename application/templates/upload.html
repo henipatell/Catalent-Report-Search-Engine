@@ -1,15 +1,23 @@
 {% extends 'layout.html' %}
 {% block content %}
+<div class="container">
     <div class="row">
       <div class="col-md-12 text-center">
-        <p> Upload your report file(.pdf) from here. <p>
-        </br>
+        <p> Upload your report file(PDF/Word) from here. <p>
       </div>
-      <div class="col-md-12 text-center">
-        <form enctype="multipart/form-data">
-          <input type="file" id="file" accept="application/pdf" name="file" multiple >
-          <input type="submit" class="btn btn-primary" value="Upload" formmethod="post" formaction="">
-        </form>
-      </div>
-  </div>
+    </div>
+    <form enctype="multipart/form-data">
+      <div class="row justify-content-md-center">
+          <div class="col col-lg-6">
+            <!-- <input type="file" id="file" class="custom-file-input" name="file">
+            <label class="custom-file-label" for="customFile">Choose file</label> -->
+            <input type="file" id="file" name="file" multiple>
+            <!-- <div id="file-upload-filename"></div> -->
+          </div>
+          <div class="col-md-auto">
+            <input type="submit" class="btn btn-primary" value="Upload" formmethod="post" formaction="">
+          </div>
+        </div>
+    </form>
+</div>
 {% endblock %}
